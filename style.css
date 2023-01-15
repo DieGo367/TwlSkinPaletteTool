@@ -1,0 +1,40 @@
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+canvas {
+	width: 0px;
+	height: 0px;
+}
+td {
+	text-align: center;
+}
+
+.fill {
+	width: 100%;
+}
+.main {
+	width: 40%;
+	vertical-align: top;
+}
+.side {
+	width: 30%;
+	vertical-align: top;
+}
+.ib {
+	display: inline-block;
+}
+
+.palColor {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 1.5rem;
+	height: 1.5rem;
+	text-align: center;
+	font-size: 90%;
+	line-height: 150%;
+}
+.selected {
+	border: 0.2rem solid gold;
+	font-size: 70%;
+	line-height: 140%;
+}

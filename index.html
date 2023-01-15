@@ -1,0 +1,342 @@
+<head>
+	<script defer src="/main.js"></script>
+	<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+	<h1>TWLM++ Skin Palette Tool</h1>
+	<table class="fill"><tbody class="fill"><tr class="fill">
+		<td class="side">
+			<h2>Base Image</h2>
+			<button onclick="importBaseImage()">Set Base Image</button>
+			<br><br>
+			<table id="palBase" class="ib"><tbody><tr>
+				<td class="palColor" id="base,0">&#128683;</td>
+				<td class="palColor" id="base,1"></td>
+				<td class="palColor" id="base,2"></td>
+				<td class="palColor" id="base,3"></td>
+				<td class="palColor" id="base,4"></td>
+				<td class="palColor" id="base,5"></td>
+				<td class="palColor" id="base,6"></td>
+				<td class="palColor" id="base,7"></td>
+				<td class="palColor" id="base,8"></td>
+				<td class="palColor" id="base,9"></td>
+				<td class="palColor" id="base,10"></td>
+				<td class="palColor" id="base,11"></td>
+				<td class="palColor" id="base,12"></td>
+				<td class="palColor" id="base,13"></td>
+				<td class="palColor" id="base,14"></td>
+				<td class="palColor" id="base,15"></td>
+			</tr></tbody></table>
+			<br><br>
+			<button onclick="copyBasePaletteToAll()">Copy to All</button>
+			<br><br>
+			<canvas id="base"></canvas>
+		</td>
+		<td class="main">
+			<h2>Palette Set Editor</h2>
+			<button onclick="importPalette()">Import palette.bin</button>
+			<button onclick="exportPalette()">Export palette.bin</button>
+			<br><br>
+			<table class="ib">
+				<tbody>
+					<tr id="pal0">
+						<td class="palColor selected" id="0,0">&#128683;</td>
+						<td class="palColor" id="0,1"></td>
+						<td class="palColor" id="0,2"></td>
+						<td class="palColor" id="0,3"></td>
+						<td class="palColor" id="0,4"></td>
+						<td class="palColor" id="0,5"></td>
+						<td class="palColor" id="0,6"></td>
+						<td class="palColor" id="0,7"></td>
+						<td class="palColor" id="0,8"></td>
+						<td class="palColor" id="0,9"></td>
+						<td class="palColor" id="0,10"></td>
+						<td class="palColor" id="0,11"></td>
+						<td class="palColor" id="0,12"></td>
+						<td class="palColor" id="0,13"></td>
+						<td class="palColor" id="0,14"></td>
+						<td class="palColor" id="0,15"></td>
+					</tr>
+					<tr id="pal1">
+						<td class="palColor" id="1,0">&#128683;</td>
+						<td class="palColor" id="1,1"></td>
+						<td class="palColor" id="1,2"></td>
+						<td class="palColor" id="1,3"></td>
+						<td class="palColor" id="1,4"></td>
+						<td class="palColor" id="1,5"></td>
+						<td class="palColor" id="1,6"></td>
+						<td class="palColor" id="1,7"></td>
+						<td class="palColor" id="1,8"></td>
+						<td class="palColor" id="1,9"></td>
+						<td class="palColor" id="1,10"></td>
+						<td class="palColor" id="1,11"></td>
+						<td class="palColor" id="1,12"></td>
+						<td class="palColor" id="1,13"></td>
+						<td class="palColor" id="1,14"></td>
+						<td class="palColor" id="1,15"></td>
+					</tr>
+					<tr id="pal2">
+						<td class="palColor" id="2,0">&#128683;</td>
+						<td class="palColor" id="2,1"></td>
+						<td class="palColor" id="2,2"></td>
+						<td class="palColor" id="2,3"></td>
+						<td class="palColor" id="2,4"></td>
+						<td class="palColor" id="2,5"></td>
+						<td class="palColor" id="2,6"></td>
+						<td class="palColor" id="2,7"></td>
+						<td class="palColor" id="2,8"></td>
+						<td class="palColor" id="2,9"></td>
+						<td class="palColor" id="2,10"></td>
+						<td class="palColor" id="2,11"></td>
+						<td class="palColor" id="2,12"></td>
+						<td class="palColor" id="2,13"></td>
+						<td class="palColor" id="2,14"></td>
+						<td class="palColor" id="2,15"></td>
+					</tr>
+					<tr id="pal3">
+						<td class="palColor" id="3,0">&#128683;</td>
+						<td class="palColor" id="3,1"></td>
+						<td class="palColor" id="3,2"></td>
+						<td class="palColor" id="3,3"></td>
+						<td class="palColor" id="3,4"></td>
+						<td class="palColor" id="3,5"></td>
+						<td class="palColor" id="3,6"></td>
+						<td class="palColor" id="3,7"></td>
+						<td class="palColor" id="3,8"></td>
+						<td class="palColor" id="3,9"></td>
+						<td class="palColor" id="3,10"></td>
+						<td class="palColor" id="3,11"></td>
+						<td class="palColor" id="3,12"></td>
+						<td class="palColor" id="3,13"></td>
+						<td class="palColor" id="3,14"></td>
+						<td class="palColor" id="3,15"></td>
+					</tr>
+					<tr id="pal4">
+						<td class="palColor" id="4,0">&#128683;</td>
+						<td class="palColor" id="4,1"></td>
+						<td class="palColor" id="4,2"></td>
+						<td class="palColor" id="4,3"></td>
+						<td class="palColor" id="4,4"></td>
+						<td class="palColor" id="4,5"></td>
+						<td class="palColor" id="4,6"></td>
+						<td class="palColor" id="4,7"></td>
+						<td class="palColor" id="4,8"></td>
+						<td class="palColor" id="4,9"></td>
+						<td class="palColor" id="4,10"></td>
+						<td class="palColor" id="4,11"></td>
+						<td class="palColor" id="4,12"></td>
+						<td class="palColor" id="4,13"></td>
+						<td class="palColor" id="4,14"></td>
+						<td class="palColor" id="4,15"></td>
+					</tr>
+					<tr id="pal5">
+						<td class="palColor" id="5,0">&#128683;</td>
+						<td class="palColor" id="5,1"></td>
+						<td class="palColor" id="5,2"></td>
+						<td class="palColor" id="5,3"></td>
+						<td class="palColor" id="5,4"></td>
+						<td class="palColor" id="5,5"></td>
+						<td class="palColor" id="5,6"></td>
+						<td class="palColor" id="5,7"></td>
+						<td class="palColor" id="5,8"></td>
+						<td class="palColor" id="5,9"></td>
+						<td class="palColor" id="5,10"></td>
+						<td class="palColor" id="5,11"></td>
+						<td class="palColor" id="5,12"></td>
+						<td class="palColor" id="5,13"></td>
+						<td class="palColor" id="5,14"></td>
+						<td class="palColor" id="5,15"></td>
+					</tr>
+					<tr id="pal6">
+						<td class="palColor" id="6,0">&#128683;</td>
+						<td class="palColor" id="6,1"></td>
+						<td class="palColor" id="6,2"></td>
+						<td class="palColor" id="6,3"></td>
+						<td class="palColor" id="6,4"></td>
+						<td class="palColor" id="6,5"></td>
+						<td class="palColor" id="6,6"></td>
+						<td class="palColor" id="6,7"></td>
+						<td class="palColor" id="6,8"></td>
+						<td class="palColor" id="6,9"></td>
+						<td class="palColor" id="6,10"></td>
+						<td class="palColor" id="6,11"></td>
+						<td class="palColor" id="6,12"></td>
+						<td class="palColor" id="6,13"></td>
+						<td class="palColor" id="6,14"></td>
+						<td class="palColor" id="6,15"></td>
+					</tr>
+					<tr id="pal7">
+						<td class="palColor" id="7,0">&#128683;</td>
+						<td class="palColor" id="7,1"></td>
+						<td class="palColor" id="7,2"></td>
+						<td class="palColor" id="7,3"></td>
+						<td class="palColor" id="7,4"></td>
+						<td class="palColor" id="7,5"></td>
+						<td class="palColor" id="7,6"></td>
+						<td class="palColor" id="7,7"></td>
+						<td class="palColor" id="7,8"></td>
+						<td class="palColor" id="7,9"></td>
+						<td class="palColor" id="7,10"></td>
+						<td class="palColor" id="7,11"></td>
+						<td class="palColor" id="7,12"></td>
+						<td class="palColor" id="7,13"></td>
+						<td class="palColor" id="7,14"></td>
+						<td class="palColor" id="7,15"></td>
+					</tr>
+					<tr id="pal8">
+						<td class="palColor" id="8,0">&#128683;</td>
+						<td class="palColor" id="8,1"></td>
+						<td class="palColor" id="8,2"></td>
+						<td class="palColor" id="8,3"></td>
+						<td class="palColor" id="8,4"></td>
+						<td class="palColor" id="8,5"></td>
+						<td class="palColor" id="8,6"></td>
+						<td class="palColor" id="8,7"></td>
+						<td class="palColor" id="8,8"></td>
+						<td class="palColor" id="8,9"></td>
+						<td class="palColor" id="8,10"></td>
+						<td class="palColor" id="8,11"></td>
+						<td class="palColor" id="8,12"></td>
+						<td class="palColor" id="8,13"></td>
+						<td class="palColor" id="8,14"></td>
+						<td class="palColor" id="8,15"></td>
+					</tr>
+					<tr id="pal9">
+						<td class="palColor" id="9,0">&#128683;</td>
+						<td class="palColor" id="9,1"></td>
+						<td class="palColor" id="9,2"></td>
+						<td class="palColor" id="9,3"></td>
+						<td class="palColor" id="9,4"></td>
+						<td class="palColor" id="9,5"></td>
+						<td class="palColor" id="9,6"></td>
+						<td class="palColor" id="9,7"></td>
+						<td class="palColor" id="9,8"></td>
+						<td class="palColor" id="9,9"></td>
+						<td class="palColor" id="9,10"></td>
+						<td class="palColor" id="9,11"></td>
+						<td class="palColor" id="9,12"></td>
+						<td class="palColor" id="9,13"></td>
+						<td class="palColor" id="9,14"></td>
+						<td class="palColor" id="9,15"></td>
+					</tr>
+					<tr id="pal10">
+						<td class="palColor" id="10,0">&#128683;</td>
+						<td class="palColor" id="10,1"></td>
+						<td class="palColor" id="10,2"></td>
+						<td class="palColor" id="10,3"></td>
+						<td class="palColor" id="10,4"></td>
+						<td class="palColor" id="10,5"></td>
+						<td class="palColor" id="10,6"></td>
+						<td class="palColor" id="10,7"></td>
+						<td class="palColor" id="10,8"></td>
+						<td class="palColor" id="10,9"></td>
+						<td class="palColor" id="10,10"></td>
+						<td class="palColor" id="10,11"></td>
+						<td class="palColor" id="10,12"></td>
+						<td class="palColor" id="10,13"></td>
+						<td class="palColor" id="10,14"></td>
+						<td class="palColor" id="10,15"></td>
+					</tr>
+					<tr id="pal11">
+						<td class="palColor" id="11,0">&#128683;</td>
+						<td class="palColor" id="11,1"></td>
+						<td class="palColor" id="11,2"></td>
+						<td class="palColor" id="11,3"></td>
+						<td class="palColor" id="11,4"></td>
+						<td class="palColor" id="11,5"></td>
+						<td class="palColor" id="11,6"></td>
+						<td class="palColor" id="11,7"></td>
+						<td class="palColor" id="11,8"></td>
+						<td class="palColor" id="11,9"></td>
+						<td class="palColor" id="11,10"></td>
+						<td class="palColor" id="11,11"></td>
+						<td class="palColor" id="11,12"></td>
+						<td class="palColor" id="11,13"></td>
+						<td class="palColor" id="11,14"></td>
+						<td class="palColor" id="11,15"></td>
+					</tr>
+					<tr id="pal12">
+						<td class="palColor" id="12,0">&#128683;</td>
+						<td class="palColor" id="12,1"></td>
+						<td class="palColor" id="12,2"></td>
+						<td class="palColor" id="12,3"></td>
+						<td class="palColor" id="12,4"></td>
+						<td class="palColor" id="12,5"></td>
+						<td class="palColor" id="12,6"></td>
+						<td class="palColor" id="12,7"></td>
+						<td class="palColor" id="12,8"></td>
+						<td class="palColor" id="12,9"></td>
+						<td class="palColor" id="12,10"></td>
+						<td class="palColor" id="12,11"></td>
+						<td class="palColor" id="12,12"></td>
+						<td class="palColor" id="12,13"></td>
+						<td class="palColor" id="12,14"></td>
+						<td class="palColor" id="12,15"></td>
+					</tr>
+					<tr id="pal13">
+						<td class="palColor" id="13,0">&#128683;</td>
+						<td class="palColor" id="13,1"></td>
+						<td class="palColor" id="13,2"></td>
+						<td class="palColor" id="13,3"></td>
+						<td class="palColor" id="13,4"></td>
+						<td class="palColor" id="13,5"></td>
+						<td class="palColor" id="13,6"></td>
+						<td class="palColor" id="13,7"></td>
+						<td class="palColor" id="13,8"></td>
+						<td class="palColor" id="13,9"></td>
+						<td class="palColor" id="13,10"></td>
+						<td class="palColor" id="13,11"></td>
+						<td class="palColor" id="13,12"></td>
+						<td class="palColor" id="13,13"></td>
+						<td class="palColor" id="13,14"></td>
+						<td class="palColor" id="13,15"></td>
+					</tr>
+					<tr id="pal14">
+						<td class="palColor" id="14,0">&#128683;</td>
+						<td class="palColor" id="14,1"></td>
+						<td class="palColor" id="14,2"></td>
+						<td class="palColor" id="14,3"></td>
+						<td class="palColor" id="14,4"></td>
+						<td class="palColor" id="14,5"></td>
+						<td class="palColor" id="14,6"></td>
+						<td class="palColor" id="14,7"></td>
+						<td class="palColor" id="14,8"></td>
+						<td class="palColor" id="14,9"></td>
+						<td class="palColor" id="14,10"></td>
+						<td class="palColor" id="14,11"></td>
+						<td class="palColor" id="14,12"></td>
+						<td class="palColor" id="14,13"></td>
+						<td class="palColor" id="14,14"></td>
+						<td class="palColor" id="14,15"></td>
+					</tr>
+					<tr id="pal15">
+						<td class="palColor" id="15,0">&#128683;</td>
+						<td class="palColor" id="15,1"></td>
+						<td class="palColor" id="15,2"></td>
+						<td class="palColor" id="15,3"></td>
+						<td class="palColor" id="15,4"></td>
+						<td class="palColor" id="15,5"></td>
+						<td class="palColor" id="15,6"></td>
+						<td class="palColor" id="15,7"></td>
+						<td class="palColor" id="15,8"></td>
+						<td class="palColor" id="15,9"></td>
+						<td class="palColor" id="15,10"></td>
+						<td class="palColor" id="15,11"></td>
+						<td class="palColor" id="15,12"></td>
+						<td class="palColor" id="15,13"></td>
+						<td class="palColor" id="15,14"></td>
+						<td class="palColor" id="15,15"></td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+		<td class="side">
+			<h2>Color Picker</h2>
+			<p>Editing palette #<span id="palIdx">0</span> color #<span id="colorIdx">0</span></p>
+			<input id="colorIn" type="color">
+			<br><br>
+			<input id="bgrIn" type="text" placeholder="BGR15">
+			<input id="rgbIn" type="text" placeholder="RGB">
+		</td>
+	</tr></tbody></table>
+</body>
