@@ -8,6 +8,11 @@ canvas {
 td {
 	text-align: center;
 }
+a {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+}
 
 .fill {
 	width: 100%;
