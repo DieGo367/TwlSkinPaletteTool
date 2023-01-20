@@ -5,9 +5,20 @@
 </head>
 <body>
 	<h1>TWLM++ Skin Palette Tool</h1>
-	<a href="https://github.com/DieGo367/TwlSkinPaletteTool">Source</a>
+	<div class="corner">
+		<a href="https://github.com/DieGo367/TwlSkinPaletteTool">Source</a>
+	</div>
 	<table class="fill"><tbody class="fill"><tr class="fill">
-		<td class="side">
+		<td class="side" id="fontMode" hidden>
+			<h2>Preview Font</h2>
+			TODO!
+			<!-- <button onclick="importNFTR()">Import font</button>
+			<br><br>
+			<textarea></textarea>
+			<br><br>
+			<canvas id="textpreview" width="200" height="100"></canvas> -->
+		</td>
+		<td class="side" id="imageMode">
 			<h2>Base Image</h2>
 			<button onclick="importBaseImage()">Set Base Image</button>
 			<br><br>
@@ -32,12 +43,13 @@
 			<br><br>
 			<button onclick="copyBasePaletteToAll()">Copy to All</button>
 			<br><br>
-			<canvas id="base"></canvas>
+			<canvas id="base" class="smol"></canvas>
 		</td>
 		<td class="main">
 			<h2>Palette Set Editor</h2>
 			<button onclick="importPalette()">Import palette.bin</button>
 			<button onclick="exportPalette()">Export palette.bin</button>
+			<button id="modeSwitch" style="margin-left: 1rem;" onclick="switchEditMode()">Switch to Font Mode</button>
 			<br><br>
 			<table class="ib">
 				<tbody>

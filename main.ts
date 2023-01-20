@@ -3,11 +3,15 @@
 const fileInputElem = document.createElement("input");
 fileInputElem.setAttribute("type", "file");
 const aDownloadElem = document.createElement("a");
+
 const colorInput = document.getElementById("colorIn") as HTMLInputElement;
 const textInputBGR = document.getElementById("bgrIn") as HTMLInputElement;
 const textInputRGB = document.getElementById("rgbIn") as HTMLInputElement;
-const spanPalIdx = document.getElementById("palIdx");
-const spanColorIdx = document.getElementById("colorIdx");
+const spanPalIdx = document.getElementById("palIdx")!;
+const spanColorIdx = document.getElementById("colorIdx")!;
+const btnModeSwitch = document.getElementById("modeSwitch")!;
+const columnImageMode = document.getElementById("imageMode")!;
+const columnFontMode = document.getElementById("fontMode")!;
 
 const colors = [
 	"#61829A", "#BA4900", "#FB0018", "#FB8AF8",
@@ -18,7 +22,7 @@ const colors = [
 
 const baseImage: number[][] = [];
 const basePalette = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-let baseName = "palette";
+let paletteName = "palette";
 const palettes = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,6 +42,7 @@ const palettes = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 let editingColor = 0;
+let fontMode = false;
 
 
 
@@ -125,7 +130,7 @@ function importBaseImage() {
 				baseImage.unshift(pixelRow);
 			}
 			
-			baseName = file.name.substring(0, file.name.length - 4);
+			paletteName = file.name.substring(0, file.name.length - 4);
 			drawTo("base", baseImage, basePalette);
 			updateBasePalette();
 		}
@@ -156,7 +161,7 @@ function importBaseImage() {
 				basePalette[i] = getShort(paletteData, i * 2);
 			}
 
-			baseName = file.name.substring(0, file.name.length - 4);
+			paletteName = file.name.substring(0, file.name.length - 4);
 			drawTo("base", baseImage, basePalette);
 			updateBasePalette();
 		}
@@ -168,25 +173,27 @@ function importPalette() {
 	fileInput(".bin", async file => {
 		const buffer = await file.arrayBuffer();
 		const data = new Uint8Array(buffer);
+		const palColorCount = fontMode ? 4 : 16;
 		for (let i = 0; i < 16; i++) {
-			for (let j = 0; j < 16; j++) {
-				palettes[i][j] = getShortBE(data, (i * 16 + j) * 2);
+			for (let j = 0; j < palColorCount; j++) {
+				palettes[i][j] = getShortBE(data, (i * palColorCount + j) * 2);
 			}
 		}
 		updatePaletteEditor();
 	});
 }
 function exportPalette() {
-	const data = new Uint8Array(512);
+	const palColorCount = fontMode ? 4 : 16;
+	const data = new Uint8Array(palColorCount * 16 * 2);
 	for (let i = 0; i < 16; i++) {
-		for (let j = 0; j < 16; j++) {
-			putShortBE(data, (i * 16 + j) * 2, palettes[i][j]);
+		for (let j = 0; j < palColorCount; j++) {
+			putShortBE(data, (i * palColorCount + j) * 2, palettes[i][j]);
 		}
 	}
 	const blob = new Blob([data]);
 	const url = URL.createObjectURL(blob);
 	aDownloadElem.setAttribute("href", url);
-	aDownloadElem.setAttribute("download", baseName + ".bin");
+	aDownloadElem.setAttribute("download", paletteName + ".bin");
 	aDownloadElem.click();
 	URL.revokeObjectURL(url);
 }
@@ -233,8 +240,8 @@ function selectColorCell(paletteNum: number, idx: number) {
 	editingColor = paletteNum * 16 + idx;
 	setColorInputValues(palettes[paletteNum][idx]);
 
-	spanPalIdx!.innerText = "" + paletteNum;
-	spanColorIdx!.innerText = "" + idx;
+	spanPalIdx.innerText = "" + paletteNum;
+	spanColorIdx.innerText = "" + idx;
 	document.getElementsByClassName("selected")[0].classList.remove("selected");
 	document.getElementById(paletteNum + ',' + idx)?.classList.add("selected");
 }
@@ -250,6 +257,32 @@ function copyBasePaletteToAll() {
 		palettes[i] = basePalette.slice(0, basePalette.length);
 	}
 	updatePaletteEditor();
+}
+
+function switchEditMode() {
+	fontMode = !fontMode;
+	if (fontMode) {
+		btnModeSwitch.innerText = "Switch to Image Mode";
+		columnFontMode.removeAttribute("hidden");
+		columnImageMode.setAttribute("hidden", "hidden");
+		for (let i = 0; i < 16; i++) {
+			for (let j = 4; j < 16; j++) {
+				const cell = document.getElementById(i + ',' + j) as HTMLTableCellElement;
+				cell.style.display = "none";
+			}
+		}
+	}
+	else {
+		btnModeSwitch.innerText = "Switch to Font Mode";
+		columnImageMode.removeAttribute("hidden");
+		columnFontMode.setAttribute("hidden", "hidden");
+		for (let i = 0; i < 16; i++) {
+			for (let j = 4; j < 16; j++) {
+				const cell = document.getElementById(i + ',' + j) as HTMLTableCellElement;
+				cell.style.display = "";
+			}
+		}
+	}
 }
 
 
