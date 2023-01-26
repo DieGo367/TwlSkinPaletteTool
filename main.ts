@@ -1,5 +1,3 @@
-"use strict";
-
 const fileInputElem = document.createElement("input");
 fileInputElem.setAttribute("type", "file");
 const aDownloadElem = document.createElement("a");
@@ -12,6 +10,8 @@ const spanColorIdx = document.getElementById("colorIdx")!;
 const btnModeSwitch = document.getElementById("modeSwitch")!;
 const columnImageMode = document.getElementById("imageMode")!;
 const columnFontMode = document.getElementById("fontMode")!;
+const textInputFontPreview = document.getElementById("textIn") as HTMLInputElement;
+const fontPreviewCanvas = document.getElementById("textPreview") as HTMLCanvasElement;
 
 const colors = [
 	"#61829A", "#BA4900", "#FB0018", "#FB8AF8",
@@ -19,6 +19,20 @@ const colors = [
 	"#00A238", "#49DB8A", "#30BAF3", "#0059F3",
 	"#000092", "#8A00D3", "#D300EB", "#FB0092"
 ];
+
+type FontData = {
+	width: number,
+	height: number,
+	bitdepth: number,
+	chars: {
+		[char: string]: {
+			glyph: Uint8Array,
+			leftSpace: number,
+			width: number,
+			advance: number
+		}
+	}
+};
 
 const baseImage: number[][] = [];
 const basePalette = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -43,6 +57,8 @@ const palettes = [
 ];
 let editingColor = 0;
 let fontMode = false;
+const font: FontData = {width: 0, height: 0, bitdepth: 2, chars: {}};
+let fontPalIdx = 0;
 
 
 
@@ -198,6 +214,94 @@ function exportPalette() {
 	URL.revokeObjectURL(url);
 }
 
+function importNFTR() {
+	fileInput(".nftr", async file => {
+		const buffer = await file.arrayBuffer();
+		const data = new Uint8Array(buffer);
+
+		const infoOffset = getShort(data, 0x0C);
+		const glyphsOffset = getInt(data, infoOffset + 0x10) - 8;
+		const widthsOffset = getInt(data, infoOffset + 0x14) - 8;
+		let charMapOffset = getInt(data, infoOffset + 0x18) - 8;
+
+		const chunkSize = getInt(data, glyphsOffset + 0x04);
+		const width = data[glyphsOffset + 0x08];
+		const height = data[glyphsOffset + 0x09];
+		const tileSize = getShort(data, glyphsOffset + 0x0A);
+		const depth = data[glyphsOffset + 0x0E];
+		const tileCount = Math.floor((chunkSize - 0x10) / tileSize);
+		
+		const tiles: Uint8Array[] = [];
+		const spacings: Uint8Array[] = [];
+		for (let i = 0; i < tileCount; i++) {
+			tiles.push(data.slice(
+				glyphsOffset + 0x10 + i * tileSize,
+				glyphsOffset + 0x10 + (i + 1) * tileSize
+			));
+			spacings.push(data.slice(
+				widthsOffset + 0x10 + i * 3,
+				widthsOffset + 0x10 + (i + 1) * 3
+			));
+		}
+
+		const charData: FontData["chars"] = {};
+		while (charMapOffset > -8) {
+			const startChar = getShort(data, charMapOffset + 0x08);
+			const endChar = getShort(data, charMapOffset + 0x0A);
+			const mapType = getInt(data, charMapOffset + 0x0C);
+			const charCount = endChar - startChar + 1;
+
+			if (mapType === 0) {
+				const startTileIndex = getShort(data, charMapOffset + 0x14);
+				for (let i = 0; i < charCount; i++) {
+					const [leftSpace, width, advance] = spacings[startTileIndex + i];
+					charData[String.fromCodePoint(startChar + i)] = {
+						glyph: tiles[startTileIndex + i],
+						leftSpace, width, advance
+					};
+				}
+			}
+			else if (mapType === 1) {
+				for (let i = 0; i < charCount; i++) {
+					const tileIndex = getShort(data, charMapOffset + 0x14 + i*2);
+					if (tileIndex != 0xFFFF) {
+						const [leftSpace, width, advance] = spacings[tileIndex];
+						charData[String.fromCodePoint(startChar + i)] = {
+							glyph: tiles[tileIndex],
+							leftSpace, width, advance
+						};
+					}
+				}
+			}
+			else if (mapType === 2) {
+				const charCount = getShort(data, charMapOffset + 0x14);
+				for (let i = 0; i < charCount; i++) {
+					const char = getShort(data, charMapOffset + 0x16 + i*4);
+					const tileIndex = getShort(data, charMapOffset + 0x18 + i*4);
+					const [leftSpace, width, advance] = spacings[tileIndex];
+					charData[String.fromCodePoint(char)] = {
+						glyph: tiles[tileIndex],
+						leftSpace, width, advance
+					};
+				}
+			}
+
+			charMapOffset = getInt(data, charMapOffset + 0x10) - 8;
+		}
+
+		font.width = width;
+		font.height = height;
+		font.bitdepth = depth;
+		font.chars = charData;
+
+		textInputFontPreview.removeAttribute("hidden");
+		fontPreviewCanvas.removeAttribute("hidden");
+		fontPreviewCanvas.width = fontPreviewCanvas.clientWidth;
+		fontPreviewCanvas.height = fontPreviewCanvas.clientHeight;
+		updateFontPreview();
+	});
+}
+
 function drawTo(canvasID: string, pixels: number[][], palette: number[]) {
 	if (pixels.length === 0) return;
 	const canvas = document.getElementById(canvasID) as HTMLCanvasElement;
@@ -259,6 +363,48 @@ function copyBasePaletteToAll() {
 	updatePaletteEditor();
 }
 
+function drawGlyph(ctx: CanvasRenderingContext2D, x: number, y: number, glyph: Uint8Array, glyphWidth: number, font: FontData) {
+	let value = 0, bits = 0;
+	let row = 0, col = 0;
+	for (let byte of glyph) {
+		for (let i = 0; i < 8; i++) {
+			const top_bit = (byte & 0b10000000) >>> 7;
+			value = (value << 1) + top_bit;
+			if (++bits === font.bitdepth) {
+				if (value && row < glyphWidth) {
+					ctx.fillStyle = BGR15_to_CSS(palettes[fontPalIdx][value]);
+					ctx.fillRect(x + row, y + col, 1, 1);
+				}
+				if (++row === font.width) {
+					if (++col === font.height) return;
+					row = 0;
+				}
+				value = 0;
+				bits = 0;
+			}
+			byte = byte << 1; 
+		}
+	}
+}
+
+function updateFontPreview() {
+	const str = textInputFontPreview.value;
+	const ctx = fontPreviewCanvas.getContext("2d")!;
+	ctx.clearRect(0, 0, fontPreviewCanvas.width, fontPreviewCanvas.height);
+	let x = 0, y = 0;
+	for (const char of str) {
+		if (char in font.chars) {
+			const {glyph, leftSpace, width, advance} = font.chars[char];
+			drawGlyph(ctx, x + leftSpace, y, glyph, width, font);
+			x += advance;
+		}
+		if (char === '\n') {
+			x = 0;
+			y += font.height;
+		}
+	}
+}
+
 function switchEditMode() {
 	fontMode = !fontMode;
 	if (fontMode) {
@@ -310,6 +456,12 @@ for (let i = 0; i < 16; i++) {
 		const cell = document.getElementById(i + ',' + j) as HTMLTableCellElement;
 		cell.onclick = () => selectColorCell(i, j);
 	}
-	document.getElementById("pal" + i)!.onmouseenter = () => drawTo("base", baseImage, palettes[i]);
+	document.getElementById("pal" + i)!.onmouseenter = () => {
+		if (fontMode) {
+			fontPalIdx = i;
+			updateFontPreview();
+		}
+		else drawTo("base", baseImage, palettes[i]);
+	}
 }
 document.getElementById("palBase")!.onmouseenter = () => drawTo("base", baseImage, basePalette);

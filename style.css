@@ -45,3 +45,8 @@ td {
 	font-size: 70%;
 	line-height: 140%;
 }
+.preview {
+	border: 1px solid black;
+	width: 200px;
+	height: 100px;
+}
