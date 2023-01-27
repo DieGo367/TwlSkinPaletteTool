@@ -12,6 +12,9 @@ const columnImageMode = document.getElementById("imageMode")!;
 const columnFontMode = document.getElementById("fontMode")!;
 const textInputFontPreview = document.getElementById("textIn") as HTMLInputElement;
 const fontPreviewCanvas = document.getElementById("textPreview") as HTMLCanvasElement;
+const pFontPreviewPalIdx = document.getElementById("fontPreviewPalIdx")!;
+const pImagePreviewPalIdx = document.getElementById("imagePreviewPalIdx")!;
+const selectRecolorPalette = document.getElementById("recolorPalSel") as HTMLInputElement;
 
 const colors = [
 	"#61829A", "#BA4900", "#FB0018", "#FB8AF8",
@@ -149,6 +152,7 @@ function importBaseImage() {
 			paletteName = file.name.substring(0, file.name.length - 4);
 			drawTo("base", baseImage, basePalette);
 			updateBasePalette();
+			pImagePreviewPalIdx.removeAttribute("hidden");
 		}
 		else if (file.name.endsWith(".grf")) {
 			const buffer = await file.arrayBuffer();
@@ -180,6 +184,7 @@ function importBaseImage() {
 			paletteName = file.name.substring(0, file.name.length - 4);
 			drawTo("base", baseImage, basePalette);
 			updateBasePalette();
+			pImagePreviewPalIdx.removeAttribute("hidden");
 		}
 		else alert("Base image should be a .bmp or .grf file");
 	});
@@ -295,6 +300,7 @@ function importNFTR() {
 		font.chars = charData;
 
 		textInputFontPreview.removeAttribute("hidden");
+		pFontPreviewPalIdx.removeAttribute("hidden");
 		fontPreviewCanvas.removeAttribute("hidden");
 		fontPreviewCanvas.width = fontPreviewCanvas.clientWidth;
 		fontPreviewCanvas.height = fontPreviewCanvas.clientHeight;
@@ -361,6 +367,44 @@ function copyBasePaletteToAll() {
 		palettes[i] = basePalette.slice(0, basePalette.length);
 	}
 	updatePaletteEditor();
+}
+
+function generatePaletteViaRecolor() {
+	if (baseImage.length === 0) return alert("Set a base image first.");
+	fileInput("image/*", async file => {
+		const url = URL.createObjectURL(file);
+		const image = new Image();
+		await new Promise(resolve => {
+			image.onload = resolve;
+			image.src = url;
+		});
+		URL.revokeObjectURL(url);
+
+		if (image.height !== baseImage.length || image.width !== baseImage[0].length) {
+			return alert(`Mismatch in image size! The base image is ${baseImage[0].length}x${baseImage.length}, but this image is ${image.width}x${image.height}.`);
+		}
+		
+		const canvas = document.createElement("canvas");
+		canvas.width = image.width;
+		canvas.height = image.height;
+		const ctx = canvas.getContext("2d", {willReadFrequently: true})!;
+		ctx.drawImage(image, 0, 0);
+
+		const baseImageFlat = baseImage.flat();
+		const palNum = parseInt(selectRecolorPalette.value);
+		for (let colorIdx = 0; colorIdx < 16; colorIdx++) {
+			const pxIdx = baseImageFlat.indexOf(colorIdx);
+			if (pxIdx !== -1) {
+				const x = pxIdx % canvas.width;
+				const y = Math.floor(pxIdx / canvas.width);
+				const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+				palettes[palNum][colorIdx] = RGB_to_BGR15(r, g, b);
+			}
+			else palettes[palNum][colorIdx] = 0;
+		}
+
+		updatePaletteEditor();
+	});
 }
 
 function drawGlyph(ctx: CanvasRenderingContext2D, x: number, y: number, glyph: Uint8Array, glyphWidth: number, font: FontData) {
@@ -460,8 +504,15 @@ for (let i = 0; i < 16; i++) {
 		if (fontMode) {
 			fontPalIdx = i;
 			updateFontPreview();
+			pFontPreviewPalIdx.innerText = `Previewing palette #${i}`;
 		}
-		else drawTo("base", baseImage, palettes[i]);
+		else {
+			drawTo("base", baseImage, palettes[i]);
+			pImagePreviewPalIdx.innerText = `Previewing palette #${i}`;
+		}
 	}
 }
-document.getElementById("palBase")!.onmouseenter = () => drawTo("base", baseImage, basePalette);
+document.getElementById("palBase")!.onmouseenter = () => {
+	drawTo("base", baseImage, basePalette);
+	pImagePreviewPalIdx.innerText = "Viewing base image";
+}

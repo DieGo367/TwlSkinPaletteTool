@@ -12,7 +12,7 @@
 		<td class="side" id="fontMode" hidden>
 			<h2>Preview Font</h2>
 			<button onclick="importNFTR()">Load NFTR Font</button>
-			<br><br>
+			<p id="fontPreviewPalIdx" hidden>Preview palette #0</p>
 			<textarea id="textIn" class="preview" oninput="updateFontPreview()" hidden></textarea>
 			<br><br>
 			<canvas id="textPreview" class="preview" hidden></canvas>
@@ -20,7 +20,9 @@
 		<td class="side" id="imageMode">
 			<h2>Base Image</h2>
 			<button onclick="importBaseImage()">Set Base Image</button>
-			<br><br>
+			<p id="imagePreviewPalIdx" hidden>Viewing base image</p>
+			<canvas id="base" class="smol"></canvas>
+			<h3>Base Palette</h3>
 			<table id="palBase" class="ib"><tbody><tr>
 				<td class="palColor" id="base,0">&#128683;</td>
 				<td class="palColor" id="base,1"></td>
@@ -41,11 +43,29 @@
 			</tr></tbody></table>
 			<br><br>
 			<button onclick="copyBasePaletteToAll()">Copy to All</button>
-			<br><br>
-			<canvas id="base" class="smol"></canvas>
+			<h3>Set Palette via Recolored Image</h3>
+			<select id="recolorPalSel">
+				<option value="0">Gray-Blue Palette</option>
+				<option value="1">Brown Palette</option>
+				<option value="2">Red Palette</option>
+				<option value="3">Pink Palette</option>
+				<option value="4">Orange Palette</option>
+				<option value="5">Yellow Palette</option>
+				<option value="6">Lime Palette</option>
+				<option value="7">Green Palette</option>
+				<option value="8">Dark Green Palette</option>
+				<option value="9">Turquoise Palette</option>
+				<option value="10">Light Blue Palette</option>
+				<option value="11">Blue Palette</option>
+				<option value="12">Dark Blue Palette</option>
+				<option value="13">Violet Palette</option>
+				<option value="14">Purple Palette</option>
+				<option value="15">Magenta Palette</option>
+			</select>
+			<button onclick="generatePaletteViaRecolor()">Import Recolored Image</button>
 		</td>
 		<td class="main">
-			<h2>Palette Set Editor</h2>
+			<h2>Palette Collection</h2>
 			<button onclick="importPalette()">Import palette.bin</button>
 			<button onclick="exportPalette()">Export palette.bin</button>
 			<button id="modeSwitch" style="margin-left: 1rem;" onclick="switchEditMode()">Switch to Font Mode</button>
