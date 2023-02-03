@@ -26,4 +26,5 @@ When you're finished making changes, click the __"Export palette.bin"__ button t
 Enter font mode by clicking the __"Switch to Font Mode"__ button in the Palette Set Editor. This mode is for creating smaller palette files used with NFTR fonts (currently this is only for `username.bin`). It also has a preview feature! Load in a `.nftr` file to see a text box and preview appear. Type in the text box to update the preview. Like with images, hover over the palettes with your mouse to preview them with your text.
 
 ## Building locally
-This project is just a static website, albeit using TypeScript. Compile the TypeScript file using `tsc`, then use the http server of your choice.
+Run `deno task build` to build, then serve via the http server of your choice. You can also run `deno task serve` to run a development server with file watching and live reload.
+Deno is mostly here in the project's workspace just so that I can get types on http imports (Preact in this case) in the editor. You could build with esbuild normally without Deno if you wanted to.
