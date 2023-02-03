@@ -1,8 +1,0 @@
-{
-	"compilerOptions": {
-		"target": "ES2022",
-		"strict": true,
-		"noEmitOnError": true
-	},
-	"files": ["main.ts"]
-}

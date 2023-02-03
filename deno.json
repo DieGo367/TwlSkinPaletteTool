@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"lib": ["dom", "deno.window"],
+		"jsx": "react-jsx",
+		"jsxImportSource": "npm:preact@10.11.3"
+	},
+	"tasks": {
+		"build": "deno run -A npm:esbuild index.tsx --bundle --format=esm --outfile=index.js --jsx=automatic --jsx-import-source=https://esm.sh/preact@10.11.3 --define:LIVE_RELOAD=false --minify",
+		"serve": "deno run -A tasks/serve.ts"
+	}
+}
