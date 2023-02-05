@@ -23,8 +23,9 @@ You can also generate a palette using a recolored version of your base image. In
 When you're finished making changes, click the __"Export palette.bin"__ button to download your palette set. Place this file in the `palettes` folder of your skin and name it after the image it is for, replacing the extension with `.bin`. Be sure to enable the corresponding `UserPalette` option for that image in your `theme.ini`.
 
 ### Font mode
-Enter font mode by clicking the __"Switch to Font Mode"__ button in the Palette Set Editor. This mode is for creating smaller palette files used with NFTR fonts (currently this is only for `username.bin`). It also has a preview feature! Load in a `.nftr` file to see a text box and preview appear. Type in the text box to update the preview. Like with images, hover over the palettes with your mouse to preview them with your text.
+Enter font mode by clicking the __"Switch to Font Mode"__ button in the Palette Collection. This mode is for creating smaller palette files used with NFTR fonts (currently this is only for `username.bin`). It also has a preview feature! Load in a `.nftr` file to see a text box and preview appear. Type in the text box to update the preview. Like with images, hover over the palettes with your mouse to preview them with your text.
 
 ## Building locally
-Run `deno task build` to build, then serve via the http server of your choice. You can also run `deno task serve` to run a development server with file watching and live reload.
-Deno is mostly here in the project's workspace just so that I can get types on http imports (Preact in this case) in the editor. You could build with esbuild normally without Deno if you wanted to.
+With [Deno](https://deno.land/) installed, run `deno task build` to build, then serve via the http server of your choice. You can also run `deno task serve` to run a development server with file watching and live reload.
+
+Deno is mostly here in the project workspace just so that I can get types on http imports (Preact in this case) while editing in VSCode. Otherwise, the project doesn't require Deno at all. You could build with esbuild normally by recreating the same commands used in the Deno tasks.

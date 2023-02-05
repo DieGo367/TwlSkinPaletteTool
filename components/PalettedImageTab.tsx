@@ -156,7 +156,7 @@ export default function PalletedImageTab(props: PalettedImageTabProps) {
 
 	if (!props.enabled) return <></>;
 	else return <>
-		<h2>Base Image</h2>
+		<h3>Base Image</h3>
 		<button onClick={importPalettedImage}>Set Base Image</button>
 		{ image ? <>
 			<p>{previewIdx === -1 ? "Viewing base image" : `Previewing palette #${previewIdx}`}</p>
@@ -165,30 +165,32 @@ export default function PalletedImageTab(props: PalettedImageTabProps) {
 				height={image.pixels.length}
 				ref={canvas => drawImage(canvas, image.pixels, previewIdx === -1 ? image.palette : props.palettes?.[previewIdx] ?? [])}
 			/>
-			<h3>Base Palette</h3>
+			<h4>Base Palette</h4>
 			<PaletteCollection palettes={[image.palette]} onPaletteHover={props.onPaletteHover}/>
-			<br/><br/>
+			<section/>
 			<button onClick={() => copyPaletteToAll(image.palette)}>Copy to All</button>
-			<h3>Set Palette via Recolored Image</h3>
-			<select value={targetPaletteIdx} onChange={e => setTargetPaletteIdx(parseInt(e.currentTarget.value))}>
-				<option value="0">Gray-Blue Palette</option>
-				<option value="1">Brown Palette</option>
-				<option value="2">Red Palette</option>
-				<option value="3">Pink Palette</option>
-				<option value="4">Orange Palette</option>
-				<option value="5">Yellow Palette</option>
-				<option value="6">Lime Palette</option>
-				<option value="7">Green Palette</option>
-				<option value="8">Dark Green Palette</option>
-				<option value="9">Turquoise Palette</option>
-				<option value="10">Light Blue Palette</option>
-				<option value="11">Blue Palette</option>
-				<option value="12">Dark Blue Palette</option>
-				<option value="13">Violet Palette</option>
-				<option value="14">Purple Palette</option>
-				<option value="15">Magenta Palette</option>
-			</select>
-			<button onClick={() => importRecoloredImage(image.pixels)}>Import Recolored Image</button>
+			<h4>Set Palette via Recolored Image</h4>
+			<div class="grid">
+				<select value={targetPaletteIdx} onChange={e => setTargetPaletteIdx(parseInt(e.currentTarget.value))}>
+					<option value="0">Gray-Blue Palette</option>
+					<option value="1">Brown Palette</option>
+					<option value="2">Red Palette</option>
+					<option value="3">Pink Palette</option>
+					<option value="4">Orange Palette</option>
+					<option value="5">Yellow Palette</option>
+					<option value="6">Lime Palette</option>
+					<option value="7">Green Palette</option>
+					<option value="8">Dark Green Palette</option>
+					<option value="9">Turquoise Palette</option>
+					<option value="10">Light Blue Palette</option>
+					<option value="11">Blue Palette</option>
+					<option value="12">Dark Blue Palette</option>
+					<option value="13">Violet Palette</option>
+					<option value="14">Purple Palette</option>
+					<option value="15">Magenta Palette</option>
+				</select>
+				<button onClick={() => importRecoloredImage(image.pixels)}>Import Recolored Image</button>
+			</div>
 		</> : null }
 	</>;
 }

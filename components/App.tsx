@@ -75,8 +75,8 @@ export default function App() {
 		setPalettes(newPalettes);
 	}
 	
-	return <table class="fill"><tbody class="fill"><tr class="fill">
-		<td class="side">
+	return <div class="grid" style={{textAlign: "center"}}>
+		<div>
 			<PalettedImageTab
 				enabled={editorMode === "paletted"}
 				palettes={palettes}
@@ -94,13 +94,14 @@ export default function App() {
 				palettes={palettes}
 				previewIdx={previewIdx}
 			/>
-		</td>
-		<td class="main">
-			<h2>Palette Collection</h2>
-			<button onClick={importPalette}>Import palette.bin</button>
-			<button onClick={exportPalette}>Export palette.bin</button>
-			<button onClick={switchMode} style={{marginLeft: "1rem"}}>Switch Mode</button>
-			<br/><br/>
+		</div>
+		<div>
+			<h3>Palette Collection</h3>
+			<div class="grid">
+				<button onClick={importPalette}>Import palette.bin</button>
+				<button onClick={exportPalette}>Export palette.bin</button>
+			</div>
+			<button onClick={switchMode}>{editorMode === "paletted" ? "Switch to Font Mode" : "Switch to Image Mode"}</button>
 			<PaletteCollection
 				palettes={palettes}
 				paletteLength={editorMode === "paletted" ? 16 : 4}
@@ -108,34 +109,35 @@ export default function App() {
 				onColorClick={(row, col) => selectSlot([row, col])}
 				onPaletteHover={idx => setPreviewIdx(idx)}
 			/>
-		</td>
-		<td class="side">
-			<h2>Color Picker</h2>
+		</div>
+		<div>
+			<h3>Color Picker</h3>
 			<p>Editing palette #{slot[0]} color #{slot[1]}</p>
 			<input type="color"
 				onChange={e => setColor(CSS_to_BGR15(e.currentTarget.value))}
 				value={BGR15_to_CSS(currentColor)}
 			/>
-			<br/>
-			<label class="ib">
-				<p>BGR15</p>
-				<input type="text"
-					onChange={e => {
-						const color = parseInt(e.currentTarget.value, 16);
-						if (!isNaN(color)) setColor(color);
-					}}
-					value={currentColor.toString(16).padStart(4, '0')}
-					placeholder="0000"
-				/>
-			</label>
-			<label class="ib">
-				<p>RGB</p>
-				<input type="text"
-					onChange={e => setColor(CSS_to_BGR15("#" + e.currentTarget.value))}
-					value={BGR15_to_CSS(currentColor).substring(1, 7)}
-					placeholder="000000"
-				/>
-			</label>
-		</td>
-	</tr></tbody></table>;
+			<div class="grid">
+				<label>
+					BGR15
+					<input type="text"
+						onChange={e => {
+							const color = parseInt(e.currentTarget.value, 16);
+							if (!isNaN(color)) setColor(color);
+						}}
+						value={currentColor.toString(16).padStart(4, '0')}
+						placeholder="0000"
+					/>
+				</label>
+				<label>
+					RGB
+					<input type="text"
+						onChange={e => setColor(CSS_to_BGR15("#" + e.currentTarget.value))}
+						value={BGR15_to_CSS(currentColor).substring(1, 7)}
+						placeholder="000000"
+					/>
+				</label>
+			</div>
+		</div>
+	</div>;
 }

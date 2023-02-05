@@ -154,13 +154,14 @@ export default function FontTab(props: FontTabProps) {
 
 	if (!props.enabled) return <></>;
 	else return <>
-		<h2>Preview Font</h2>
+		<h3>Preview Font</h3>
 		<button onClick={importNFTR}>Load NFTR Font</button>
 		{ font ? <>
 			<p>Previewing palette #{previewIdx}</p>
-			<textarea class="preview" value={text} onInput={e => setText(e.currentTarget.value)}/>
-			<br/><br/>
-			<canvas class="preview" ref={canvas => drawText(canvas, font)}/>
+			<textarea value={text} rows={9} onInput={e => setText(e.currentTarget.value)}/>
+			<canvas style={{
+				border: "var(--border-width) solid var(--form-element-border-color)"
+			}} ref={canvas => drawText(canvas, font)}/>
 		</> : null}
 	</>;
 }
