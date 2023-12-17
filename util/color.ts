@@ -1,7 +1,7 @@
 export function RGB_to_BGR15(r: number, g: number, b: number) {
-	r = Math.floor(r / 255 * 31);
-	g = Math.floor(g / 255 * 31);
-	b = Math.floor(b / 255 * 31);
+	r = Math.round(r / 255 * 31);
+	g = Math.round(g / 255 * 31);
+	b = Math.round(b / 255 * 31);
 	return 1 << 15 | b << 10 | g << 5 | r;
 }
 
@@ -9,7 +9,7 @@ export function BGR15_to_RGB(bgr: number): [r: number, g: number, b: number] {
 	let r = bgr & 0b11111;
 	let g = bgr >>> 5 & 0b11111;
 	let b = bgr >>> 10 & 0b11111;
-	return [Math.floor(r / 31 * 255), Math.floor(g / 31 * 255), Math.floor(b / 31 * 255)];
+	return [Math.round(r / 31 * 255), Math.round(g / 31 * 255), Math.round(b / 31 * 255)];
 }
 
 export function BGR15_to_CSS(bgr: number) {
